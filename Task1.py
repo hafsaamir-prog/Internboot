@@ -29,3 +29,32 @@ print(df.describe())
 print("\nSales mean:", df["sales"].mean())
 print("Sales median:", df["sales"].median())
 print("Sales mode:", df["sales"].mode().iloc[0])
+
+# 6. Aggregate daily total sales over all stores and families
+daily_sales = df.groupby("date", as_index=False)["sales"].sum()
+
+# Line chart: daily sales over time
+plt.figure(figsize=(14, 5))
+plt.plot(daily_sales["date"], daily_sales["sales"])
+plt.title("Total Daily Sales Over Time")
+plt.xlabel("Date")
+plt.ylabel("Sales")
+plt.tight_layout()
+plt.show()
+
+# 7. Monthly sales bar chart
+monthly_sales = daily_sales.copy()
+monthly_sales["year_month"] = monthly_sales["date"].dt.to_period("M")
+monthly_sales = (
+    monthly_sales.groupby("year_month", as_index=False)["sales"].sum()
+)
+monthly_sales["year_month"] = monthly_sales["year_month"].astype(str)
+
+plt.figure(figsize=(16, 5))
+sns.barplot(data=monthly_sales, x="year_month", y="sales", color="steelblue")
+plt.xticks(rotation=90)
+plt.title("Total Monthly Sales")
+plt.xlabel("Year-Month")
+plt.ylabel("Sales")
+plt.tight_layout()
+plt.show()
