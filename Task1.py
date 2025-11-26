@@ -58,3 +58,31 @@ plt.xlabel("Year-Month")
 plt.ylabel("Sales")
 plt.tight_layout()
 plt.show()
+
+# 8. Average sales by weekday
+df["weekday"] = df["date"].dt.day_name()
+weekday_sales = (
+    df.groupby("weekday", as_index=False)["sales"].mean()
+    .sort_values("sales", ascending=False)
+)
+
+plt.figure(figsize=(8, 4))
+sns.barplot(data=weekday_sales, x="weekday", y="sales", order=weekday_sales["weekday"])
+plt.xticks(rotation=45)
+plt.title("Average Sales by Weekday")
+plt.tight_layout()
+plt.show()
+
+# 9. Average sales by product family (top 10)
+family_sales = (
+    df.groupby("family", as_index=False)["sales"].mean()
+    .sort_values("sales", ascending=False)
+    .head(10)
+)
+
+plt.figure(figsize=(10, 5))
+sns.barplot(data=family_sales, x="family", y="sales")
+plt.xticks(rotation=45, ha="right")
+plt.title("Top 10 Families by Average Sales")
+plt.tight_layout()
+plt.show()
